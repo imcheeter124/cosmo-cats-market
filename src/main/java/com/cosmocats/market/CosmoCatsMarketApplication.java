@@ -1,4 +1,4 @@
-package com.cosmocats.cosmo_cats_market;
+package com.cosmocats.market;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

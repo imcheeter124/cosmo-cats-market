@@ -1,4 +1,4 @@
-package com.cosmocats.cosmo_cats_market;
+package com.cosmocats.market;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
