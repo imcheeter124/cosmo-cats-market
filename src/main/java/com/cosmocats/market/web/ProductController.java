@@ -19,6 +19,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
+import com.cosmocats.market.dto.ProductPage;
+import jakarta.validation.constraints.Max;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @RestController
 @RequestMapping("/api/v1/products")
@@ -35,12 +39,14 @@ public class ProductController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ProductResponse>> getAll() {
-        List<ProductResponse> result = new ArrayList<>();
-        for (Product product : productService.getAll()) {
-            result.add(productMapper.toResponse(product));
+    public ResponseEntity<ProductPage> getAll(
+            @RequestParam(defaultValue = "0") @Min(0) int page,
+            @RequestParam(defaultValue = "20") @Min(1) @Max(100) int size) {
+        List<ProductResponse> content = new ArrayList<>();
+        for (Product product : productService.getPage(page, size)) {
+            content.add(productMapper.toResponse(product));
         }
-        return ResponseEntity.ok(result);
+        return ResponseEntity.ok(new ProductPage(content, page, size, productService.count()));
     }
 
     @PostMapping

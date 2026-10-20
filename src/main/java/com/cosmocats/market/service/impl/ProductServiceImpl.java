@@ -50,8 +50,19 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public List<Product> getAll() {
-        return new ArrayList<>(products.values());
+    public List<Product> getPage(int page, int size) {
+        List<Product> all = new ArrayList<>(products.values());
+        long from = (long) page * size;
+        if (from >= all.size()) {
+            return List.of();
+        }
+        int to = (int) Math.min(from + size, all.size());
+        return all.subList((int) from, to);
+    }
+
+    @Override 
+    public long count() {
+        return products.size();
     }
 
     @Override

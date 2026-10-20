@@ -9,7 +9,9 @@ public interface ProductService {
 
     Product getById(Long id);
 
-    List<Product> getAll();
+    List<Product> getPage(int page, int size);
+    
+    long count();
 
     Product update(Long id, Product product);
 
