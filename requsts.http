@@ -1,0 +1,42 @@
+### 1. Список усіх продуктів
+GET http://localhost:8080/api/v1/products
+
+### 2. Один продукт
+GET http://localhost:8080/api/v1/products/1
+
+### 3. Створити продукт
+POST http://localhost:8080/api/v1/products
+Content-Type: application/json
+
+{
+  "name": "Galaxy Catnip",
+  "description": "Premium catnip from Andromeda",
+  "price": 3.99,
+  "categoryId": 1
+}
+
+### 4. Оновити продукт
+PUT http://localhost:8080/api/v1/products/3
+Content-Type: application/json
+
+{
+  "name": "Galaxy Catnip Deluxe",
+  "description": "Even more premium",
+  "price": 5.49,
+  "categoryId": 1
+}
+
+### 5. Видалити продукт
+DELETE http://localhost:8080/api/v1/products/3
+
+### 6. Неіснуючий продукт (має бути 404)
+GET http://localhost:8080/api/v1/products/999
+
+### 7. Невалідні дані (має бути 400)
+POST http://localhost:8080/api/v1/products
+Content-Type: application/json
+
+{
+  "name": "",
+  "price": -5
+}
