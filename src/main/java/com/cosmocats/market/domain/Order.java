@@ -12,7 +12,7 @@ import lombok.Value;
 public class Order {
     Long id;
     Long cartId;
-    @Singular 
+    @Singular
     List<OrderItem> items;
     OrderStatus status;
     Instant createdAt;
