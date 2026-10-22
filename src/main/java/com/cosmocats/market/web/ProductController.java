@@ -1,10 +1,14 @@
 package com.cosmocats.market.web;
 
 import com.cosmocats.market.domain.Product;
+import com.cosmocats.market.dto.ProductPage;
 import com.cosmocats.market.dto.ProductRequest;
 import com.cosmocats.market.dto.ProductResponse;
 import com.cosmocats.market.service.ProductService;
 import com.cosmocats.market.web.mapper.ProductMapper;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,12 +21,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.Min;
-import com.cosmocats.market.dto.ProductPage;
-import jakarta.validation.constraints.Max;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/v1/products")

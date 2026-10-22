@@ -1,10 +1,10 @@
 package com.cosmocats.market.domain;
 
-import lombok.Singular;
-import java.time.Instant;
 import com.cosmocats.market.common.OrderStatus;
+import java.time.Instant;
 import java.util.List;
 import lombok.Builder;
+import lombok.Singular;
 import lombok.Value;
 
 @Value
