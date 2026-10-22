@@ -1,5 +1,6 @@
 package com.cosmocats.market.web.exception;
 
+import com.cosmocats.market.service.exception.CategoryNotFoundException;
 import com.cosmocats.market.service.exception.ProductNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import java.net.URI;
@@ -23,6 +24,15 @@ public class GlobalExceptionHandler {
         ProblemDetail problem = ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, ex.getMessage());
         problem.setType(URI.create("https://cosmo-cats.market/errors/not-found"));
         problem.setTitle("Product not found");
+        problem.setInstance(URI.create(request.getRequestURI()));
+        return problem;
+    }
+
+    @ExceptionHandler(CategoryNotFoundException.class)
+    public ProblemDetail handleCategoryNotFound(CategoryNotFoundException ex, HttpServletRequest request) {
+        ProblemDetail problem = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, ex.getMessage());
+        problem.setType(URI.create("https://cosmo-cats.market/errors/validation"));
+        problem.setTitle("Validation failed");
         problem.setInstance(URI.create(request.getRequestURI()));
         return problem;
     }

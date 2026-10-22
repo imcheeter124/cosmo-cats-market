@@ -51,3 +51,13 @@ GET http://localhost:8080/api/v1/products?page=100&size=20
 
 ### 11. Невалідний size (має бути 400)
 GET http://localhost:8080/api/v1/products?size=1000
+
+### 12. Неіснуюча категорія (має бути 400)
+POST http://localhost:8080/api/v1/products
+Content-Type: application/json
+
+{
+  "name": "Ghost Milk",
+  "price": 1.00,
+  "categoryId": 999
+}

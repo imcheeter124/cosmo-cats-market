@@ -2,12 +2,14 @@ package com.cosmocats.market.service.impl;
 
 import com.cosmocats.market.domain.Product;
 import com.cosmocats.market.service.ProductService;
+import com.cosmocats.market.service.exception.CategoryNotFoundException;
 import com.cosmocats.market.service.exception.ProductNotFoundException;
 import jakarta.annotation.PostConstruct;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentSkipListMap;
 import java.util.concurrent.atomic.AtomicLong;
 import lombok.extern.slf4j.Slf4j;
@@ -16,6 +18,8 @@ import org.springframework.stereotype.Service;
 @Slf4j
 @Service
 public class ProductServiceImpl implements ProductService {
+
+    private static final Set<Long> CATEGORY_IDS = Set.of(1L, 2L, 3L);
 
     private final Map<Long, Product> products = new ConcurrentSkipListMap<>();
     private final AtomicLong idGenerator = new AtomicLong();
@@ -38,6 +42,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Product create(Product product) {
+        checkCategoryExists(product.getCategoryId());
         Long id = idGenerator.incrementAndGet();
         Product saved = product.toBuilder().id(id).build();
         products.put(id, saved);
@@ -75,6 +80,7 @@ public class ProductServiceImpl implements ProductService {
         if (!products.containsKey(id)) {
             throw new ProductNotFoundException(id);
         }
+        checkCategoryExists(product.getCategoryId());
         Product updated = product.toBuilder().id(id).build();
         products.put(id, updated);
         log.info("Updated product id={}", id);
@@ -85,5 +91,11 @@ public class ProductServiceImpl implements ProductService {
     public void delete(Long id) {
         products.remove(id);
         log.info("Deleted product id={}", id);
+    }
+
+    private void checkCategoryExists(Long categoryId) {
+        if (!CATEGORY_IDS.contains(categoryId)) {
+            throw new CategoryNotFoundException(categoryId);
+        }
     }
 }
