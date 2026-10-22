@@ -2,22 +2,30 @@ package com.cosmocats.market.service.impl;
 
 import com.cosmocats.market.domain.Product;
 import com.cosmocats.market.service.ProductService;
+import com.cosmocats.market.service.exception.CategoryNotFoundException;
 import com.cosmocats.market.service.exception.ProductNotFoundException;
+import jakarta.annotation.PostConstruct;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentSkipListMap;
 import java.util.concurrent.atomic.AtomicLong;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+@Slf4j
 @Service
 public class ProductServiceImpl implements ProductService {
+
+    private static final Set<Long> CATEGORY_IDS = Set.of(1L, 2L, 3L);
 
     private final Map<Long, Product> products = new ConcurrentSkipListMap<>();
     private final AtomicLong idGenerator = new AtomicLong();
 
-    public ProductServiceImpl() {
+    @PostConstruct
+    void initSampleData() {
         create(Product.builder()
                 .name("Star Milk")
                 .description("Fresh milk from the Milky Way")
@@ -34,9 +42,11 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Product create(Product product) {
+        checkCategoryExists(product.getCategoryId());
         Long id = idGenerator.incrementAndGet();
         Product saved = product.toBuilder().id(id).build();
         products.put(id, saved);
+        log.info("Created product id={} name={}", id, saved.getName());
         return saved;
     }
 
@@ -50,8 +60,19 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public List<Product> getAll() {
-        return new ArrayList<>(products.values());
+    public List<Product> getPage(int page, int size) {
+        List<Product> all = new ArrayList<>(products.values());
+        long from = (long) page * size;
+        if (from >= all.size()) {
+            return List.of();
+        }
+        int to = (int) Math.min(from + size, all.size());
+        return all.subList((int) from, to);
+    }
+
+    @Override
+    public long count() {
+        return products.size();
     }
 
     @Override
@@ -59,13 +80,22 @@ public class ProductServiceImpl implements ProductService {
         if (!products.containsKey(id)) {
             throw new ProductNotFoundException(id);
         }
+        checkCategoryExists(product.getCategoryId());
         Product updated = product.toBuilder().id(id).build();
         products.put(id, updated);
+        log.info("Updated product id={}", id);
         return updated;
     }
 
     @Override
     public void delete(Long id) {
         products.remove(id);
+        log.info("Deleted product id={}", id);
+    }
+
+    private void checkCategoryExists(Long categoryId) {
+        if (!CATEGORY_IDS.contains(categoryId)) {
+            throw new CategoryNotFoundException(categoryId);
+        }
     }
 }
