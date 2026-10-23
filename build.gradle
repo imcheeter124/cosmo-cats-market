@@ -13,9 +13,20 @@ java {
 	}
 }
 
+ext {
+	// Minimal line coverage per source file, verified by jacocoTestCoverageVerification
+	minimumCoveragePerFile = 0.8
+	filesExcludedFromCoverage = [
+			"**/*MarketApplication.*"
+	]
+}
+
 repositories {
 	mavenCentral()
 }
+
+apply from: "${rootProject.projectDir}/gradle/test.gradle"
+apply from: "${rootProject.projectDir}/gradle/jacoco.gradle"
 
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
@@ -27,8 +38,4 @@ dependencies {
 	testCompileOnly 'org.projectlombok:lombok'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 	testAnnotationProcessor 'org.projectlombok:lombok'
-}
-
-tasks.named('test') {
-	useJUnitPlatform()
 }
